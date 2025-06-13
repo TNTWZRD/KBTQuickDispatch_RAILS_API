@@ -1,0 +1,43 @@
+# MySQL. Versions 5.7 and up are supported.
+#
+# Install the mysql2 driver:
+#   gem install mysql2
+#
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  host: <%= ENV.fetch("DATABASE_HOST", "192.168.40.84") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 3306) %>
+  username: <%= ENV.fetch("BACKEND_DATABASE_USER", "rails_backend") %>
+  password: <%= ENV.fetch("BACKEND_DATABASE_PASSWORD", "python") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+
+development:
+  <<: *default
+  database: backend_development
+
+
+test:
+  <<: *default
+  database: backend_test
+
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: backend_production
+    username: <%= ENV["BACKEND_DATABASE_USER"] %>
+    password: <%= ENV["BACKEND_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: backend_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: backend_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: backend_production_cable
+    migrations_paths: db/cable_migrate
