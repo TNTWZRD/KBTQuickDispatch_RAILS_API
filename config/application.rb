@@ -40,6 +40,8 @@ module Backend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
 
+    config.force_ssl = true
+
     config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
     
     config.api_only = true
