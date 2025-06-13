@@ -43,6 +43,8 @@ module Backend
     config.force_ssl = true
 
     config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+    config.hosts << "qtapp.jajliardo.com"
     
     config.api_only = true
     config.http_authenticatable = [:database]
