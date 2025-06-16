@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
   
-  devise_for :users, controllers: {
+  devise_for :users, path: '', path_names: {
+    sign_in: 'login',
+    sign_out: 'logout',
+    registration: 'signup'
+  }, 
+  controllers: {
     registrations: 'users/registrations',
     sessions: 'users/sessions'
   }
 
-  devise_scope :user do
-    get 'users/confirm_session', to: 'users/sessions#confirm'
-  end
+  get 'current_user', to: 'current_user#index'
 
   namespace :api do
     namespace :v1 do

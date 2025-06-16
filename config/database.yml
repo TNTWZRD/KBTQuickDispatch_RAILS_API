@@ -6,7 +6,7 @@
 default: &default
   adapter: mysql2
   encoding: utf8mb4
-  host: <%= ENV.fetch("DATABASE_HOST", "192.168.40.84") %>
+  host: <%= ENV.fetch("DATABASE_HOST", "192.168.40.132") %>
   port: <%= ENV.fetch("DATABASE_PORT", 3306) %>
   username: <%= ENV.fetch("BACKEND_DATABASE_USER", "rails_backend") %>
   password: <%= ENV.fetch("BACKEND_DATABASE_PASSWORD", "python") %>

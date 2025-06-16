@@ -5,7 +5,7 @@ module Api
       respond_to :json
 
       def status
-        render json: { status: 'ok' }, status: :ok
+        render json: { status: 200, message: 'API Online' }, status: :ok
       end
       # Add more general API actions here
     end

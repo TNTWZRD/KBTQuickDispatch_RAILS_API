@@ -10,13 +10,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def respond_with(resource, _opts = {})
     if request.method == "POST" && resource.persisted?
-      render json: { message: 'Signed up successfully.', data: [...resource, ...current_user ] }, status: :ok
+      render json: { 
+        status: {code: 200, message: 'User registered successfully.'},
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes],
+      }, status: :ok
     elsif request.method == "DELETE"
-      render json: { message: 'Account deleted successfully.' }, status: :ok
+      render json: {
+        status: {code: 200, message: 'User deleted successfully.'}
+      }, status: :ok
     else
       render json: {
-        message: "User registration failed.",
-        errors: resource.errors.messages
+        status: {code: 422, message: 'User registration failed.', errors: resource.errors.full_messages},
       }, status: :unprocessable_entity
     end
   end

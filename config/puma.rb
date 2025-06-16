@@ -30,7 +30,7 @@ threads threads_count, threads_count
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #port ENV.fetch("PORT", 3000)
 
-ssl_bind '0.0.0.0', '3000', {
+ssl_bind '0.0.0.0', '4000', {
   key: "config/ssl/server.key",
   cert: "config/ssl/server.crt",
   verify_mode: "none"
