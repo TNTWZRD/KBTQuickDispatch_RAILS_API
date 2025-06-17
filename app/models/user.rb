@@ -80,4 +80,12 @@ class User < ApplicationRecord
     self.has_role?(:admin)
   end
 
+  def get_roles
+    roles = []
+    ROLE_VAL.each do |role_name, role_value|
+      roles << role_name if has_role?(role_value)
+    end
+    roles
+  end
+
 end
