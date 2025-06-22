@@ -31,6 +31,7 @@ class Api::V1::UsersController < Api::V1::BaseController
         user: UserSerializer.new(current_user).serializable_hash[:data][:attributes]
       }, status: :ok
     else
+      puts current_user.errors.full_messages
       render json: {
         status: 'error',
         message: 'Failed to update preferences',
