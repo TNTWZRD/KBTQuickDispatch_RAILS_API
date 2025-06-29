@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       put 'users/preferences', to: 'users#update_preferences'
       put 'users/change_password', to: 'users#change_password'
       
-      get 'users/getDrivers', to: 'drivers#getDrivers'
+      get 'drivers/getDrivers', to: 'drivers#getDrivers'
       
       # v1-specific routes here
     end
