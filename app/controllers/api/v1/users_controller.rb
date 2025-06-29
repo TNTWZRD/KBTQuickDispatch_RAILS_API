@@ -1,6 +1,14 @@
 class Api::V1::UsersController < Api::V1::BaseController
   before_action :authenticate_user!
 
+  def getUsers 
+    render json: {status: "Unauthorized"}, status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
+
+    users = User.all.select(:id, :name, :email, :username, :phone_number, :darkmode)
+    render json: users, status: :ok
+
+  end
+
   # Update user profile information
   def update_profile
     user_params = params.require(:user).permit(:name, :email, :username, :phone_number)
