@@ -17,15 +17,12 @@ Rails.application.routes.draw do
       get :status, to: 'base#status'
       
       # User profile management routes
-      resources :users do
-        put 'profile', to: 'users#update_profile'
-        put 'preferences', to: 'users#update_preferences'
-        put 'change_password', to: 'users#change_password'
-      end
+      put 'users/profile', to: 'users#update_profile'
+      put 'users/preferences', to: 'users#update_preferences'
+      put 'users/change_password', to: 'users#change_password'
       
-      resources :drivers do
-        get 'getDrivers', to: 'drivers#getDrivers'
-      end
+      get 'users/getDrivers', to: 'drivers#getDrivers'
+      
       # v1-specific routes here
     end
   end
