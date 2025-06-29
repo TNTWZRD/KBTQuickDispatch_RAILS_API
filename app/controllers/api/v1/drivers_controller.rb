@@ -1,10 +1,10 @@
-class Api::V1::UsersController < Api::V1::BaseController
+class Api::V1::DriversController < Api::V1::BaseController
   include RackSessionFix
   before_action :authenticate_user!
 
   def getDrivers
     respond_to :json
-    drivers = User.where(role: 'driver').order(created_at: :desc)
+    drivers = User.where("role & ? = ?", User.roles[:driver], User.roles[:driver])
     render json: drivers, status: :ok
   end
 
