@@ -3,7 +3,7 @@ class Api::V1::DriversController < Api::V1::BaseController
   before_action :authenticate_user!
 
   def getDrivers
-    drivers = User.where("role & ? = ?", User.roles[:driver], User.roles[:driver])
+    drivers = User.where("role & ? = ?", User.ROLE_VAL[:driver], User.ROLE_VAL[:driver])
     render json: drivers, status: :ok
   end
 
