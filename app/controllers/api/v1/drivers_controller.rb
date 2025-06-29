@@ -4,7 +4,7 @@ class Api::V1::DriversController < Api::V1::BaseController
 
   def getDrivers
 
-    return status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin? 
+    render json: {status: "Unauthorized"}, status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin? 
 
     drivers = User.all
     drivers.each do |driver|
