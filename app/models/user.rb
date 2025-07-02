@@ -10,6 +10,8 @@ class User < ApplicationRecord
   validates :email, presence: :true, uniqueness: { case_sensitive: false }
   validates :phone_number, uniqueness: { case_sensitive: false }, allow_blank: true
 
+  has_one :driver, dependent: :destroy
+
   ROLE_VAL = {user: 0, driver: 1, dispatcher: 2, manager: 4, owner: 8, admin: 16}.freeze
 
   attr_writer :login

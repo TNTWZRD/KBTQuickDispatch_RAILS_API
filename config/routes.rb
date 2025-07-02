@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       put 'users/preferences', to: 'users#update_preferences'
       put 'users/change_password', to: 'users#change_password'
 
+      post 'users/update_roles', to: 'users#update_roles'
+
       get 'users/getUsers', to: 'users#getUsers'
       
       get 'drivers/getDrivers', to: 'drivers#getDrivers'

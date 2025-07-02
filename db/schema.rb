@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_064730) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_205400) do
+  create_table "drivers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.integer "status", default: 1
+    t.string "reg_code"
+    t.bigint "user_id"
+    t.boolean "reports_enabled", default: true
+    t.string "phone_number", null: false
+    t.index ["name"], name: "index_drivers_on_name", unique: true
+    t.index ["user_id"], name: "index_drivers_on_user_id"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "username", default: "", null: false
     t.string "email", default: "", null: false
@@ -19,7 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_064730) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "name", default: "", null: false
-    t.string "role", default: "0", null: false
+    t.integer "role", default: 0, null: false
     t.string "phone_number", default: "", null: false
     t.integer "status", default: 0, null: false
     t.integer "driver_id"

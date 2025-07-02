@@ -1,0 +1,9 @@
+class Driver < ApplicationRecord
+
+  belongs_to :user, optional: true
+
+  validates :name, presence: false, uniqueness: { case_sensitive: false }
+  validates :phone_number, presence: false, uniqueness: { case_sensitive: false }
+  validates :user_id, uniqueness: true, allow_nil: true
+
+end
