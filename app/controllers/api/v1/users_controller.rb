@@ -70,6 +70,13 @@ class Api::V1::UsersController < Api::V1::BaseController
       return
     end
     if user.update(role: role)
+      if role & 1 == 1 then
+        # If the user is a driver, create a driver record if it doesn't exist
+        Driver.create_with(phone_number: user.phone_number || 0).find_or_create_by(user_id: user.id) unless user.driver
+        Driver.where(user_id: user_id).update(status: 1) unless !user.driver
+      else
+        Driver.where(user_id: user.id).update(status: 0) if user.driver
+      end
       render json: {
         status: 'success',
         message: 'User role updated successfully',
@@ -82,7 +89,34 @@ class Api::V1::UsersController < Api::V1::BaseController
         errors: user.errors.full_messages
       }, status: :unprocessable_entity
     end
+  end
 
+  def update_user 
+    user_params = params.require(:user).permit(:id, :name, :email, :username, :phone_number, :darkmode, :role)
+    render json: {status: "Unauthorized"}, status: :unauthorized unless current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
+    
+    user = User.find_by(id: user_params[:id])
+    if user.nil?
+      render json: {
+        status: 'error',
+        message: 'User not found'
+      }, status: :not_found
+      return
+    end
+
+    if user.update(user_params)
+      render json: {
+        status: 'success',
+        message: 'User updated successfully',
+        user: UserSerializer.new(user).serializable_hash[:data][:attributes]
+      }, status: :ok
+    else
+      render json: {
+        status: 'error',
+        message: 'Failed to update user',
+        errors: user.errors.full_messages
+      }, status: :unprocessable_entity
+    end
   end
 
   # Update user preferences

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_205400) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_215226) do
   create_table "drivers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -20,6 +20,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_205400) do
     t.bigint "user_id"
     t.boolean "reports_enabled", default: true
     t.string "phone_number", null: false
+    t.string "emergency_contact_names"
+    t.string "emergency_contact_numbers"
     t.index ["name"], name: "index_drivers_on_name", unique: true
     t.index ["user_id"], name: "index_drivers_on_user_id"
   end
