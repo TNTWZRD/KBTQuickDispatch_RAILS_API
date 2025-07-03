@@ -30,6 +30,13 @@ class Api::V1::DriversController < Api::V1::BaseController
     end
 
     if driver.update(driver_params)
+      if driver_params[:status].to_i == 0 && driver.user.present?
+        driver.user.set_role(:driver, false)
+        driver.user.save
+      elsif driver_params[:status].to_i == 1 && driver.user.present?
+        driver.user.set_role(:driver, true)
+        driver.user.save
+      end
       render json: { status: 'success', message: 'Driver updated successfully', driver: driver }, status: :ok
     else
       render json: { status: 'error', message: 'Failed to update driver', errors: driver.errors.full_messages }, status: :unprocessable_entity
