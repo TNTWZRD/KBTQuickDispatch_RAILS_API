@@ -17,8 +17,9 @@ class Api::V1::DriversController < Api::V1::BaseController
 
   def update_driver
     driver_params = params.require(:driver).permit(:id, :name, :phone_number, :status, :emergency_contact_names, :emergency_contact_numbers)
-    
-    driver = Driver.find_by(id: driver_params[:id])
+    driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_json if driver_params[:emergency_contact_names].is_a?(Array)
+    driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_json if driver_params[:emergency_contact_numbers].is_a?(Array)
+    driver = Driver.find_by(id: params[:id])
     
     if driver.nil?
       render json: { status: 'error', message: 'Driver not found' }, status: :not_found

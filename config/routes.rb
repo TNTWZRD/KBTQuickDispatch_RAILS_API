@@ -28,7 +28,7 @@ Rails.application.routes.draw do
       
       get 'drivers/getDrivers', to: 'drivers#getDrivers'
       post 'drivers/create_driver', to: 'drivers#create_driver'
-      put 'drivers/update_driver', to: 'drivers#update_driver'
+      put 'drivers/update_driver/:id', to: 'drivers#update_driver'
       delete 'drivers/delete_driver/:id', to: 'drivers#delete_driver'
       
       # v1-specific routes here
