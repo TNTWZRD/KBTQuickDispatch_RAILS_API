@@ -119,6 +119,23 @@ class Api::V1::UsersController < Api::V1::BaseController
     end
   end
 
+  def delete_user
+    user_id = params[:id]
+    render json: { status: 'error', message: 'User ID is required' }, status: :bad_request and return if user_id.blank?
+    render json: { status: 'Unauthorized' }, status: :unauthorized unless current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
+    user = User.find_by(id: user_id)
+    render json: { status: 'error', message: 'User not found' }, status: :not_found and return if user.nil?
+    if user.driver
+      user.driver.update(user_id: nil, status: 0) # Unlink driver from user and set status to inactive
+      user.update(driver_id: nil) # Unlink driver_id from user
+    end
+    if user.destroy
+      render json: { status: 'success', message: 'User deleted successfully' }, status: :ok
+    else
+      render json: { status: 'error', message: 'Failed to delete user', errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   # Update user preferences
   def update_preferences
     preference_params = params.require(:user).permit(:darkmode)

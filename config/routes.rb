@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
       post 'users/update_roles', to: 'users#update_roles'
       put 'users/update_user/:id', to: 'users#update_user'
+      destroy 'users/delete_user/:id', to: 'users#delete_user'
 
       get 'users/getUsers', to: 'users#getUsers'
       
