@@ -92,10 +92,10 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def update_user 
-    user_params = params.require(:user).permit(:id, :name, :email, :username, :phone_number, :darkmode, :role)
+    user_params = params.require(:user).permit(:name, :email, :username, :phone_number, :darkmode, :role)
     render json: {status: "Unauthorized"}, status: :unauthorized unless current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
     
-    user = User.find_by(id: user_params[:id])
+    user = User.find_by(id: params[:id])
     if user.nil?
       render json: {
         status: 'error',
