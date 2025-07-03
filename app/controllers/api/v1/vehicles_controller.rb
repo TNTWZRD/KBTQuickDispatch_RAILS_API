@@ -4,7 +4,7 @@ class Api::V1::VehiclesController < Api::V1::BaseController
   def getVehicles
     render json: {status: "Unauthorized"}, status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
 
-    vehicles = Vehicle.all
+    vehicles = Vehicle.all.to_a
     render json: vehicles, status: :ok
   end
 
