@@ -1,6 +1,6 @@
 class Driver < ApplicationRecord
 
-  belongs_to :user, optional: true
+  belongs_to :user, optional: true, dependent: :destroy
 
   validates :name, presence: false, uniqueness: { case_sensitive: false }
   validates :phone_number, presence: false, uniqueness: { case_sensitive: false }
