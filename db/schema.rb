@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_02_215226) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_03_162705) do
   create_table "drivers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -51,5 +51,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_215226) do
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
+  end
+
+  create_table "vehicles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "nickname", null: false
+    t.string "vin_number"
+    t.string "license_plate"
+    t.string "make"
+    t.string "model"
+    t.string "year"
+    t.string "color"
+    t.string "description"
+    t.string "short_notes"
+    t.integer "status", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["license_plate"], name: "index_vehicles_on_license_plate", unique: true
+    t.index ["nickname"], name: "index_vehicles_on_nickname", unique: true
+    t.index ["vin_number"], name: "index_vehicles_on_vin_number", unique: true
   end
 end
