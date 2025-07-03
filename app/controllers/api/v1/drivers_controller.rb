@@ -17,8 +17,8 @@ class Api::V1::DriversController < Api::V1::BaseController
 
   def update_driver
     driver_params = params.require(:driver).permit(:name, :phone_number, :status, :emergency_contact_names, :emergency_contact_numbers)
-    driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_json if driver_params[:emergency_contact_names].is_a?(Array)
-    driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_json if driver_params[:emergency_contact_numbers].is_a?(Array)
+    driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_str
+    driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_str
     driver = Driver.find_by(id: params[:id])
     
     if driver.nil?
@@ -35,8 +35,8 @@ class Api::V1::DriversController < Api::V1::BaseController
 
   def create_driver
     driver_params = params.require(:driver).permit(:name, :phone_number, emergency_contact_names: [], emergency_contact_numbers: [])
-    driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_json if driver_params[:emergency_contact_names].is_a?(Array)
-    driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_json if driver_params[:emergency_contact_numbers].is_a?(Array)
+    driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_str
+    driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_str
     driver = Driver.new(driver_params)
     driver.status = 1 # Default status to active
     if driver.save
