@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       put 'users/change_password', to: 'users#change_password'
 
       post 'users/update_roles', to: 'users#update_roles'
-      post 'users/update_user', to: 'users#update_user'
+      put 'users/update_user/:id', to: 'users#update_user'
 
       get 'users/getUsers', to: 'users#getUsers'
       
