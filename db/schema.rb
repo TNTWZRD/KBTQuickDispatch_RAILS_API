@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_03_162705) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_04_171807) do
   create_table "drivers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -24,6 +24,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_03_162705) do
     t.string "emergency_contact_numbers"
     t.index ["name"], name: "index_drivers_on_name", unique: true
     t.index ["user_id"], name: "index_drivers_on_user_id"
+  end
+
+  create_table "shifts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "driver_id", null: false
+    t.bigint "vehicle_id", null: false
+    t.datetime "end_time"
+    t.boolean "status", default: true, null: false
+    t.datetime "cleared_at"
+    t.datetime "last_cleared_at"
+    t.decimal "bankroll_borrowed", precision: 10, scale: 2
+    t.boolean "reports_enabled", default: true, null: false
+    t.index ["driver_id"], name: "index_shifts_on_driver_id"
+    t.index ["vehicle_id"], name: "index_shifts_on_vehicle_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -70,4 +85,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_03_162705) do
     t.index ["nickname"], name: "index_vehicles_on_nickname", unique: true
     t.index ["vin_number"], name: "index_vehicles_on_vin_number", unique: true
   end
+
+  add_foreign_key "shifts", "drivers"
+  add_foreign_key "shifts", "vehicles"
 end

@@ -7,11 +7,13 @@
 4. [API v1 Endpoints](#api-v1-endpoints)
 5. [User Management Endpoints](#user-management-endpoints)
 6. [Driver Management Endpoints](#driver-management-endpoints)
-7. [Data Validation & Requirements](#data-validation--requirements)
-8. [Role Permissions](#role-permissions)
-9. [Error Responses](#error-responses)
-10. [Quick Reference](#quick-reference)
-11. [Notes](#notes)
+7. [Vehicle Management Endpoints](#vehicle-management-endpoints)
+8. [Data Validation & Requirements](#data-validation--requirements)
+9. [Role Permissions](#role-permissions)
+10. [Error Responses](#error-responses)
+11. [Quick Reference](#quick-reference)
+12. [Notes](#notes)
+13. [Route Map](#route-map)
 
 ## Base URL
 - Development: `http://localhost:3000` (or your configured Rails server)
@@ -269,6 +271,77 @@
 
 ---
 
+## Vehicle Management Endpoints
+
+### Get All Vehicles
+- **GET** `/api/v1/vehicles/getVehicles`
+  - **Description**: Get list of all vehicles
+  - **Controller**: `Api::V1::VehiclesController#getVehicles`
+  - **Authentication**: Required
+  - **Authorization**: Dispatcher, Manager, Owner, or Admin roles
+  - **Response**: Array of vehicle objects with all fields
+
+### Create Vehicle
+- **POST** `/api/v1/vehicles/create_vehicle`
+  - **Description**: Create a new vehicle
+  - **Controller**: `Api::V1::VehiclesController#create_vehicle`
+  - **Authentication**: Required
+  - **Authorization**: Manager, Owner, or Admin roles
+  - **Request Body**:
+    ```json
+    {
+      "vehicle": {
+        "nickname": "string",
+        "vin_number": "string",
+        "license_plate": "string",
+        "make": "string",
+        "model": "string",
+        "year": "string",
+        "color": "string",
+        "description": "string",
+        "short_notes": "string",
+        "status": "number"
+      }
+    }
+    ```
+  - **Response**: Created vehicle data with status
+  - **Notes**: Vehicle status defaults to active (1)
+
+### Update Vehicle
+- **PUT** `/api/v1/vehicles/update_vehicle/:id`
+  - **Description**: Update an existing vehicle's information
+  - **Controller**: `Api::V1::VehiclesController#update_vehicle`
+  - **Authentication**: Required
+  - **Authorization**: Manager, Owner, or Admin roles
+  - **Request Body**:
+    ```json
+    {
+      "vehicle": {
+        "nickname": "string",
+        "vin_number": "string",
+        "license_plate": "string",
+        "make": "string",
+        "model": "string",
+        "year": "string",
+        "color": "string",
+        "description": "string",
+        "short_notes": "string",
+        "status": "number"
+      }
+    }
+    ```
+  - **Response**: Updated vehicle data with status
+
+### Delete Vehicle
+- **DELETE** `/api/v1/vehicles/delete_vehicle/:id`
+  - **Description**: Delete a vehicle
+  - **Controller**: `Api::V1::VehiclesController#delete_vehicle`
+  - **Authentication**: Required
+  - **Authorization**: Manager, Owner, or Admin roles
+  - **Response**: Vehicle deletion confirmation
+
+---
+
 ## Data Validation & Requirements
 
 ### User Model Validations:
@@ -284,6 +357,18 @@
 - **emergency_contact_names**: Array of strings, stored as JSON
 - **emergency_contact_numbers**: Array of strings, stored as JSON
 - **status**: Integer (0 = inactive, 1 = active)
+
+### Vehicle Model Validations:
+- **nickname**: Required, unique (case-insensitive)
+- **vin_number**: Optional, unique (case-insensitive) if provided
+- **license_plate**: Optional, unique (case-insensitive) if provided
+- **make**: Required
+- **model**: Required
+- **year**: Required
+- **color**: Optional
+- **description**: Optional
+- **short_notes**: Optional
+- **status**: Integer (0 = inactive, 1 = active, defaults to 1)
 
 ### Authentication Notes:
 - Login can be either username or email
@@ -303,8 +388,8 @@
 
 ### Endpoint Access by Role:
 - **Driver**: Profile management only
-- **Dispatcher+**: Can view users and drivers lists
-- **Manager+**: Can update users and roles (limited by hierarchy)
+- **Dispatcher+**: Can view users, drivers, and vehicles lists
+- **Manager+**: Can create, update, and delete users, drivers, and vehicles (limited by hierarchy)
 - **Owner+**: Extended role management capabilities
 - **Admin**: Full system access
 
@@ -347,6 +432,10 @@ Content-Type: application/json
 - `0`: Inactive
 - `1`: Active (default for new drivers)
 
+### Vehicle Status Codes:
+- `0`: Inactive
+- `1`: Active (default for new vehicles)
+
 ### Emergency Contacts:
 - Stored as JSON arrays in the database
 - `emergency_contact_names` and `emergency_contact_numbers` should have matching indices
@@ -366,3 +455,71 @@ Content-Type: application/json
 8. Driver status updates automatically sync with associated user role permissions
 9. Drivers with associated user accounts cannot be deleted directly - delete the user account instead
 10. User login accepts either username or email address
+11. Vehicle nicknames must be unique across the system for easy identification
+12. VIN numbers and license plates are automatically validated for uniqueness when provided
+13. Vehicle status updates affect availability for dispatch operations
+
+---
+
+## Route Map
+
+```
+QuickDispatch API Routes
+├── Authentication (Devise)
+│   ├── POST   /signup                     │ Register new user
+│   ├── POST   /login                      │ User login
+│   ├── DELETE /logout                     │ User logout
+│   └── DELETE /signup                     │ Delete account
+│
+├── Current User
+│   └── GET    /current_user               │ Get current user info
+│
+├── API v1 (/api/v1)
+│   ├── GET    /status                     │ Check API status
+│   │
+│   ├── Users (/users)
+│   │   ├── GET    /getUsers               │ List all users
+│   │   ├── PUT    /profile                │ Update profile
+│   │   ├── PUT    /preferences            │ Update preferences
+│   │   ├── PUT    /change_password        │ Change password
+│   │   ├── POST   /update_roles           │ Update user roles
+│   │   ├── PUT    /update_user/:id        │ Update user (admin)
+│   │   └── DELETE /delete_user/:id        │ Delete user (admin)
+│   │
+│   ├── Drivers (/drivers)
+│   │   ├── GET    /getDrivers             │ List all drivers
+│   │   ├── POST   /create_driver          │ Create new driver
+│   │   ├── PUT    /update_driver/:id      │ Update driver
+│   │   └── DELETE /delete_driver/:id      │ Delete driver
+│   │
+│   └── Vehicles (/vehicles)
+│       ├── GET    /getVehicles            │ List all vehicles
+│       ├── POST   /create_vehicle         │ Create new vehicle
+│       ├── PUT    /update_vehicle/:id     │ Update vehicle
+│       └── DELETE /delete_vehicle/:id     │ Delete vehicle
+```
+
+### Authorization Matrix
+
+| Endpoint Category | Driver | Dispatcher | Manager | Owner | Admin |
+|------------------|--------|------------|---------|-------|-------|
+| Authentication   | ✅     | ✅         | ✅      | ✅    | ✅    |
+| Profile Mgmt     | ✅     | ✅         | ✅      | ✅    | ✅    |
+| View Users       | ❌     | ✅         | ✅      | ✅    | ✅    |
+| View Drivers     | ❌     | ✅         | ✅      | ✅    | ✅    |
+| View Vehicles    | ❌     | ✅         | ✅      | ✅    | ✅    |
+| Manage Users     | ❌     | ❌         | ✅      | ✅    | ✅    |
+| Manage Drivers   | ❌     | ❌         | ✅      | ✅    | ✅    |
+| Manage Vehicles  | ❌     | ❌         | ✅      | ✅    | ✅    |
+| Role Management  | ❌     | ❌         | ✅*     | ✅*   | ✅    |
+
+*Limited by role hierarchy - can only modify roles at or below their level
+
+### HTTP Methods Summary
+
+| Method | Purpose              | Example                    |
+|--------|---------------------|----------------------------|
+| GET    | Retrieve data       | GET /api/v1/users/getUsers |
+| POST   | Create new resource | POST /api/v1/drivers/create_driver |
+| PUT    | Update resource     | PUT /api/v1/vehicles/update_vehicle/123 |
+| DELETE | Remove resource     | DELETE /api/v1/users/delete_user/456 |

@@ -1,5 +1,6 @@
 class Driver < ApplicationRecord
 
+  has_many :shifts, dependent: :destroy
   belongs_to :user, optional: true, dependent: :destroy
 
   validates :name, presence: false, uniqueness: { case_sensitive: false }
