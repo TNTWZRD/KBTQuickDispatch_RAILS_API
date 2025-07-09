@@ -51,3 +51,5 @@ gem "devise-jwt", "~> 0.12.1"
 gem "jsonapi-serializer", "~> 2.2"
 gem "rack-cors", "~> 3.0"
 gem "mysql2", "~> 0.5.6"
+
+gem "sqlite3", "~> 2.7"
