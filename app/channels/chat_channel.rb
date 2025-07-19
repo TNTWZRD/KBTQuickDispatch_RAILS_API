@@ -1,15 +1,24 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    logger.info "ChatChannel: User subscribed"
+    logger.info "ChatChannel: User: #{current_user&.username || 'Anonymous'} subscribed"
+    ActionCable.server.broadcast("chat_channel", { message: "User #{current_user&.username || 'Anonymous'} has joined the chat." })
     stream_from "chat_channel"
   end
 
   def unsubscribed
-    logger.info "ChatChannel: User unsubscribed"
+    logger.info "ChatChannel: User: #{current_user&.username || 'Anonymous'} unsubscribed"
+    ActionCable.server.broadcast("chat_channel", { message: "User #{current_user&.username || 'Anonymous'} has left the chat." })
   end
 
   def receive(data)
-    logger.info "ChatChannel: Received data: #{data}"
-    ActionCable.server.broadcast("chat_channel", data)
+    chat = {
+      message: data['message'],
+      user_id: current_user&.id || nil,
+      username: current_user&.username || 'Anonymous',
+      timestamp: Time.now.utc.iso8601
+    }
+
+    logger.info "ChatChannel: Received data: #{data}, from User: #{current_user&.username || 'Anonymous'} "
+    ActionCable.server.broadcast("chat_channel", chat)
   end
 end

@@ -44,9 +44,20 @@ module Backend
 
     config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
+    config.action_cable.allowed_request_origins = ['*']
+    config.action_cable.disable_request_forgery_protection = true
+
     config.hosts << "qtapp.jajliardo.com"
     
     config.api_only = true
     config.http_authenticatable = [:database]
+
+    
+    config.action_cable.log_tags = [
+      -> request { request.env['user_id'] || "no-account" },
+      :action_cable,
+      -> request { request.uuid }
+    ]
+
   end
 end
