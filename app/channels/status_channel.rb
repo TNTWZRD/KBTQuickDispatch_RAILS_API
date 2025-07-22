@@ -1,7 +1,12 @@
 class StatusChannel < ApplicationCable::Channel
-  def subscribed
 
-    return unauthorized unless current_user
+  def subscribed
+    if current_user.nil?
+      logger.warn "StatusChannel: User not authenticated, cannot subscribe"
+      transmit({ error: "You must be authenticated to subscribe to status updates." })
+      reject
+      return
+    end
 
     status = {
       status: 'online',
@@ -16,8 +21,6 @@ class StatusChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-
-    return unauthorized unless current_user
 
     status = {
       status: 'offline',

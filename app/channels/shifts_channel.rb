@@ -1,5 +1,13 @@
 class ShiftsChannel < ApplicationCable::Channel
+
   def subscribed
+    if current_user.nil?
+      logger.warn "ShiftsChannel: User not authenticated, cannot subscribe"
+      transmit({ error: "You must be authenticated to subscribe to shifts updates." })
+      reject
+      return
+    end
+
     logger.info "ShiftsChannel: User: #{current_user&.username} subscribed"
     stream_from "shifts_channel"
   end

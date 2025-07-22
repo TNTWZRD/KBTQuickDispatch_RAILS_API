@@ -1,5 +1,15 @@
 class ChatChannel < ApplicationCable::Channel
+
   def subscribed
+
+    if current_user.nil?
+      logger.warn "ChatChannel: User not authenticated, cannot subscribe"
+      transmit({ error: "You must be authenticated to subscribe to chat updates." })
+      reject
+      return
+    end
+
+
     logger.info "ChatChannel: User: #{current_user&.username || 'Anonymous'} subscribed"
     ActionCable.server.broadcast("chat_channel", { message: "User #{current_user&.username || 'Anonymous'} has joined the chat." })
     stream_from "chat_channel"
