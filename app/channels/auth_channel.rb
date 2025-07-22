@@ -1,6 +1,7 @@
 class AuthChannel < ApplicationCable::Channel
   def subscribed
     logger.info "AuthChannel subscribed, #{connection.request_info.remote_ip} , User: #{current_user&.username || 'Anonymous'}, Timestamp: #{Time.now.utc.iso8601}"
+    stream_from "auth_channel"
   end
 
   def unsubscribed

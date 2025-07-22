@@ -17,6 +17,9 @@ module ApplicationCable
     end
 
     def disconnect
+      current_user&.update(online_status: 'offline') if current_user
+      
+      # Any cleanup needed when channel is disconnected
       logger.info "WebSocket disconnected for user: #{current_user&.username || 'Unauthenticated'}"
     end
 
@@ -24,6 +27,8 @@ module ApplicationCable
     def authenticate_user!(user)
       self.current_user = user
       logger.info "User authenticated: #{user.username} (ID: #{user.id})"
+      user.update(online_status: 'online') if user
+      ActionCable.server.broadcast("status_channel", { message: "User #{user.username} has updated their status.", data: { online_status: 'online' }, status: 'online' })
     end
 
   end
