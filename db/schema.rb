@@ -10,7 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_13_222046) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_29_232118) do
+  create_table "calls", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "shift_id"
+    t.bigint "vehicle_id"
+    t.string "status", default: "waiting", null: false
+    t.datetime "scheduled_pickup_time"
+    t.datetime "picked_up_at_time"
+    t.datetime "dropped_off_at_time"
+    t.string "pickup_address", null: false
+    t.string "dropoff_address"
+    t.integer "modifers", default: 0, null: false
+    t.integer "fare", default: 0, null: false
+    t.integer "distance", default: 0, null: false
+    t.integer "duration", default: 0, null: false
+    t.string "phone_number"
+    t.string "notes"
+    t.integer "passenger_count", default: 1, null: false
+    t.datetime "canceled_at_time"
+    t.index ["shift_id"], name: "index_calls_on_shift_id"
+    t.index ["vehicle_id"], name: "fk_rails_7e62c68b19"
+  end
+
   create_table "drivers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -38,6 +61,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_222046) do
     t.decimal "bankroll_borrowed", precision: 10, scale: 2
     t.boolean "reports_enabled", default: true, null: false
     t.string "previous_vehicles"
+    t.bigint "calls_id"
+    t.index ["calls_id"], name: "index_shifts_on_calls_id"
     t.index ["driver_id"], name: "index_shifts_on_driver_id"
     t.index ["vehicle_id"], name: "index_shifts_on_vehicle_id"
   end
@@ -88,6 +113,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_13_222046) do
     t.index ["vin_number"], name: "index_vehicles_on_vin_number", unique: true
   end
 
+  add_foreign_key "calls", "shifts"
+  add_foreign_key "calls", "vehicles"
+  add_foreign_key "shifts", "calls", column: "calls_id"
   add_foreign_key "shifts", "drivers"
   add_foreign_key "shifts", "vehicles"
 end

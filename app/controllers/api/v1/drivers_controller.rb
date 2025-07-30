@@ -16,6 +16,9 @@ class Api::V1::DriversController < Api::V1::BaseController
   end
 
   def update_driver
+
+    render json: { status: 'Unauthorized' }, status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
+
     driver_params = params.require(:driver).permit(:name, :phone_number, :status, :emergency_contact_names, :emergency_contact_numbers)
     driver_params[:emergency_contact_names] if driver_params[:emergency_contact_names].blank?
     driver_params[:emergency_contact_numbers] if driver_params[:emergency_contact_numbers].blank?
@@ -44,6 +47,9 @@ class Api::V1::DriversController < Api::V1::BaseController
   end
 
   def create_driver
+
+    render json: { status: 'Unauthorized' }, status: :unauthorized unless current_user.is_dispatcher? || current_user.is_manager? || current_user.is_owner? || current_user.is_admin?
+
     driver_params = params.require(:driver).permit(:name, :phone_number, emergency_contact_names: [], emergency_contact_numbers: [])
     driver_params[:emergency_contact_names] = driver_params[:emergency_contact_names].to_json
     driver_params[:emergency_contact_numbers] = driver_params[:emergency_contact_numbers].to_json

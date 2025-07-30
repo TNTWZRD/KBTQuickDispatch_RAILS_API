@@ -37,8 +37,25 @@ Rails.application.routes.draw do
       post 'vehicles/create_vehicle', to: 'vehicles#create_vehicle'
       put 'vehicles/update_vehicle/:id', to: 'vehicles#update_vehicle'
       delete 'vehicles/delete_vehicle/:id', to: 'vehicles#delete_vehicle'
-      
-      # v1-specific routes here
+
+      resources :calls, only: [:create, :update, :destroy] do
+        collection do
+          get 'get_calls', to: 'calls#get_calls'
+          get 'get_call/:id', to: 'calls#get_call'
+          get 'pickup_call/:id', to: 'calls#pickup_call'
+          get 'dropoff_call/:id', to: 'calls#dropoff_call'
+          get 'cancel_call/:id', to: 'calls#cancel_call'
+          get 'uncancel_call/:id', to: 'calls#uncancel_call'
+          post 'reassign_call/:id/:shift_id', to: 'calls#reassign_call'
+        end
+      end
+
+      resources :shifts, only: [:create, :update, :destroy] do
+        collection do
+          get 'get_shifts', to: 'shifts#get_shifts'
+          get 'get_shift/:id', to: 'shifts#get_shift'
+        end
+      end
     end
   end
 
